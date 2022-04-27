@@ -27,7 +27,11 @@ module Spree
 
       def find_gift_card_variant
         products = Product.not_deleted.gift_cards
-        products = products&.e_gift_cards
+        products = if @is_e_gift_card
+                     products&.e_gift_cards
+                   else
+                     products&.not_e_gift_cards
+                   end
         @gift_card_variant_id = products&.first&.master.id
       end
 
