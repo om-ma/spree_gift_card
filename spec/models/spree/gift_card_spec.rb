@@ -491,7 +491,7 @@ describe Spree::GiftCard, type: :model do
     before do
       gift_card_category
       create(:secondary_credit_type)
-      Spree::Config[:allow_gift_card_redeem] = true
+      SpreeGiftCard::Config[:allow_gift_card_redeem] = true
       gift_card.update_column(:email, order.user.email)
       order.update_column(:completed_at, Time.current)
     end
@@ -502,7 +502,7 @@ describe Spree::GiftCard, type: :model do
 
     context "when gift_card_redemption is not allowed" do
       before do
-        Spree::Config[:allow_gift_card_redeem] = false
+        SpreeGiftCard::Config[:allow_gift_card_redeem] = false
       end
 
       it "expects to return false" do

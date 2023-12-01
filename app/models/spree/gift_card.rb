@@ -221,7 +221,7 @@ module Spree
     end
 
     def able_to_redeem?(user)
-      Spree::Config.allow_gift_card_redeem &&
+      SpreeGiftCard::Config[:allow_gift_card_redeem] &&
         user &&
         user.email == email &&
         amount_remaining.to_f > 0.0 && line_item.order.completed?
