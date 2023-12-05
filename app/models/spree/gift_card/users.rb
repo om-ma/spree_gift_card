@@ -6,9 +6,16 @@ module Spree
 
     # GiftCard may have many owners
     module Users
-      def belongs_to?(user)
-        owners.include?(user)
+      extend ActiveSupport::Concern
+
+      included do
+        # Define methods or associations here
+        def belongs_to?(user)
+          owners.include?(user)
+        end
       end
     end
+
+    include Users # Including the module within GiftCard class
   end
 end

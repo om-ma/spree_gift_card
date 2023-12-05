@@ -8,7 +8,7 @@ module Spree
     private
 
     def redirect_gift_card
-      redirect_to new_gift_card_path(product_id: @product) && return if @product.try :is_gift_card?
+      redirect_to new_gift_card_path(product_id: @product) if @product.try :is_gift_card?
     end
   end
 end

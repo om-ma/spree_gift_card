@@ -5,11 +5,8 @@ module Spree
 
     def self.prepended(base)   
       base.has_one :gift_card, dependent: :destroy
-
-      with_options if: :is_gift_card? do
-        base.validates :gift_card, presence: true
-        base.validates :quantity,  numericality: { less_than_or_equal_to: MAXIMUM_GIFT_CARD_LIMIT }, allow_nil: true
-      end
+      base.validates :gift_card, presence: false, if: :is_gift_card?
+      base.validates :quantity,  numericality: { less_than_or_equal_to: MAXIMUM_GIFT_CARD_LIMIT }, allow_nil: true, if: :is_gift_card?
       base.delegate :is_gift_card?, to: :product
       base.delegate :is_e_gift_card?, to: :product
     end
