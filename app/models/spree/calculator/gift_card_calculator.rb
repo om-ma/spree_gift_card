@@ -7,6 +7,7 @@ module Spree
     end
 
     def compute(order, gift_card)
+      debugger
       [order.total, gift_card.current_value].min * -1
     end
 
