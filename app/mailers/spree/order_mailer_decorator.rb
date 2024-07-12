@@ -1,6 +1,5 @@
 Spree::OrderMailer.class_eval do
   def gift_card_email(card_id, order_id)
-    debugger
     @gift_card = Spree::GiftCard.find_by(id: card_id)
     @order = Spree::Order.find_by(id: order_id)
     subject = "#{Spree::Store.current.name} #{Spree.t('gift_card_email.subject')}"

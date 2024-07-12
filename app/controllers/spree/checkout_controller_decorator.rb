@@ -6,39 +6,27 @@ Spree::CheckoutController.class_eval do
   private
 
     def add_gift_card_payments
-      debugger
-      # @order.add_gift_card_payments(@gift_card)
-
-      # Remove other payment method parameters
       params[:order].delete(:payments_attributes)
       params.delete(:payment_source)
-
-      # Calculate the remaining amount after applying gift card payments
-      valid_payments_sum = @order.payments.valid.sum(:amount)
-      remaining_amount = @order.total - valid_payments_sum
-
-      if remaining_amount > 0
-        # Apply gift card adjustment for the remaining amount
-        if @gift_card.amount_remaining >= remaining_amount
-          adjustment_amount = remaining_amount
-        else
-          adjustment_amount = @gift_card.amount_remaining
-        end
-
-        if adjustment_amount > 0
-          # debugger
-          @order.adjustments.create!(label: 'GIFT CARD', amount: -adjustment_amount,order: @order,adjustable: @order, source: @gift_card)
-
-         debugger
-          @gift_card.debit(adjustment_amount, @order)
-        end
-
-
-
-        # Redirect to the payment page if additional payment is still needed
-        if @order.total > @order.payments.valid.sum(:amount)
+      adjustment_amount = [@order.total, @gift_card.amount_remaining].min
+      if @gift_card.amount_remaining.to_f > 0.0
+        if @order.total > @gift_card.amount_remaining
+          @order.adjustments.create!(label: 'GIFT CARD', amount: -adjustment_amount, order: @order, source: @gift_card)
+          @order.update_with_updater!
+          @gift_card.debit(adjustment_amount)
           redirect_to checkout_state_path(@order.state) and return
+        else
+          @order.next
+          @order.adjustments.create!(label: 'GIFT CARD', amount: -adjustment_amount,order: @order)
+          @order.update_with_updater!
+          @order.update(state: 'complete', completed_at: Time.current)
+          handle_zero_amount_payment
+          @order.finalize!
+          redirect_to completion_route
         end
+        @gift_card.debit(adjustment_amount)
+      else
+        redirect_to checkout_state_path(@order.state) and return
       end
     end
 
@@ -55,7 +43,6 @@ Spree::CheckoutController.class_eval do
 
     def load_gift_card
       @gift_card = Spree::GiftCard.find_by(code: params[:payment_source][gift_card_payment_method.try(:id).to_s][:code])
-        # @order.update(payment_state: 'paid',state: "complete", completed_at: Time.now)
         # redirect_to order_path(@order), notice: 'Order paid with gift card successfully!'
 
       unless @gift_card
@@ -67,4 +54,25 @@ Spree::CheckoutController.class_eval do
     def gift_card_payment_method
       @gift_card_payment_method ||= Spree::PaymentMethod.gift_card.available.first
     end
+
+    def handle_zero_amount_payment
+    if @order.total == 0
+      payment_method = Spree::PaymentMethod.find_by(type: 'Spree::PaymentMethod::GiftCard') # or your specific payment method
+      create_zero_amount_payment(@order, payment_method)
+    end
+  end
+
+  def create_zero_amount_payment(order, payment_method)
+    payment = order.payments.create!(
+      amount: 0.0,
+      payment_method: payment_method,
+      state: 'completed',
+      source: @gift_card
+    )
+
+    unless payment.persisted?
+      flash[:error] = "Payment creation failed"
+      redirect_to checkout_state_path(order.state) and return
+    end
+  end
 end

@@ -128,7 +128,7 @@ module Spree
       self.calculator.compute(calculable, self)
     end
 
-    def debit(amount, order)
+    def debit(amount, order = nil)
       raise 'Cannot debit gift card by amount greater than current value.' if (amount_remaining - amount.to_f.abs) < 0
       transaction = self.transactions.build
       transaction.amount = amount
@@ -183,7 +183,7 @@ module Spree
       end
     end
 
-    def build_store_credit(user, previous_current_value, current_store)
+    def build_store_credit(user, previous_current_value, current_store)  
       user.store_credits.build(
             amount: previous_current_value,
             category: Spree::StoreCreditCategory.gift_card.last,

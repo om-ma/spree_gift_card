@@ -1,4 +1,3 @@
-<%debugger%>
 <p>Hi <%= @gift_card.name %>,</p>
 <p>
   It is our pleasure to send you this Gift Card.
@@ -7,8 +6,8 @@
 </p>
 <table cellspacing="0" cellpadding="0" border="0" width="650">
   <%# if @gift_card.variant.images.present? %>
-  <%#debugger%>
-    <tr><td colspan="2" style="padding-bottom: 15px"><%#= image_tag url_for(@gift_card.variant.images.first.variant(resize: "100x100")) %>
+    <%# <tr><td colspan="2" style="padding-bottom: 15px"> %>
+      <%#= image_tag url_for(@gift_card.variant.images.first.variant(resize: "100x100")) %>
 </td></tr>
   <%# end%>
   <tr>

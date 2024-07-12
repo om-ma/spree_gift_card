@@ -16,7 +16,6 @@ module Spree
       end
 
       def remove_gift_card_payments
-        debugger
         payments.checkout.gift_cards.map(&:invalidate!) unless completed?
       end
 
