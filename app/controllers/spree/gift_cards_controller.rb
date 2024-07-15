@@ -22,6 +22,8 @@ module Spree
         # Wrap the transaction script in a transaction so it is an atomic operation
         Spree::GiftCard.transaction do
           @gift_card = GiftCard.new(gift_card_params)
+          @gift_card.current_value = @gift_card.variant.price
+          @gift_card.original_value = @gift_card.current_value
           @gift_card.save!
           # Create line item
           line_item = LineItem.new(quantity: 1)

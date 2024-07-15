@@ -1,8 +1,12 @@
-Spree::PaymentMethod.class_eval do
+module Spree
+  module PaymentMethodDecorator
+    def self.prepended(base)
+      base.scope :gift_card, -> { where(type: 'Spree::PaymentMethod::GiftCard') }
+    end
 
-  scope :gift_card, -> { where(type: "Spree::PaymentMethod::GiftCard") }
-
-  def gift_card?
-    self.class == Spree::PaymentMethod::GiftCard
+    def gift_card?
+      self.class == Spree::PaymentMethod::GiftCard
+    end
   end
 end
+::Spree::PaymentMethod.prepend(Spree::PaymentMethodDecorator)

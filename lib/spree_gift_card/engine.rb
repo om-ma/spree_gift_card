@@ -1,3 +1,5 @@
+require_relative 'gift_card_configuration'
+
 module SpreeGiftCard
   class Engine < Rails::Engine
     require 'spree/core'
@@ -20,11 +22,15 @@ module SpreeGiftCard
       end
     end
 
-    initializer "spree.register.payment_methods" do |app|
+    initializer 'spree.backend.environment', before: :load_config_initializers do |app|
+      SpreeGiftCard::Config = SpreeGiftCard::GiftCardConfiguration.new
+    end
+
+    config.after_initialize do |app|
       app.config.spree.payment_methods << Spree::PaymentMethod::GiftCard
     end
 
-    initializer "spree.gift_card.permit_params" do |app|
+    config.after_initialize do |app|
       Spree::PermittedAttributes.source_attributes << :code
     end
 

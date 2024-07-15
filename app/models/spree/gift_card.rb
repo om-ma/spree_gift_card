@@ -11,7 +11,7 @@ module Spree
     CREDIT_ACTION = 'credit'
 
     belongs_to :variant
-    belongs_to :line_item, required: false
+    belongs_to :line_item, optional: true
 
     has_many :transactions, class_name: 'Spree::GiftCardTransaction'
 
@@ -214,7 +214,10 @@ module Spree
     end
 
     def able_to_redeem?(user)
-      Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && line_item.order.completed?
+      SpreeGiftCard::Config[:allow_gift_card_redeem] &&
+        user &&
+        user.email == email &&
+        amount_remaining.to_f > 0.0 && line_item.order.completed?
     end
 
   end
