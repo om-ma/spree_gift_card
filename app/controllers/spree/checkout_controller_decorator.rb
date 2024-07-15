@@ -31,22 +31,19 @@ Spree::CheckoutController.class_eval do
     end
 
     def remove_gift_card_payments
-      if params.key?(:remove_gift_card) && @order.using_gift_card? && params[:commit] == "Remove Gift Card"
+      if params.key?(:remove_gift_card) && @order.using_gift_card?
         @order.remove_gift_card_payments
         redirect_to checkout_state_path(@order.state) and return
       end
     end
 
     def payment_via_gift_card?
-      params[:state] == "payment" && params[:order].fetch(:payments_attributes, {}).present? && params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present? && @order.payment?
+      params[:state] == "payment" && params[:order].fetch(:payments_attributes, {}).present? && params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
     end
 
     def load_gift_card
       @gift_card = Spree::GiftCard.find_by(code: params[:payment_source][gift_card_payment_method.try(:id).to_s][:code])
-        # redirect_to order_path(@order), notice: 'Order paid with gift card successfully!'
-
       unless @gift_card
-
         redirect_to checkout_state_path(@order.state), flash: { error: Spree.t(:gift_code_not_found) } and return
       end
     end

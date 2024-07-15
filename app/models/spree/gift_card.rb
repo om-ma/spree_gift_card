@@ -15,8 +15,7 @@ module Spree
 
     has_many :transactions, class_name: 'Spree::GiftCardTransaction'
 
-   enum created_by: { user: 0, admin: 1 }
-
+    enum created_by: { user: 0, admin: 1 }
     validates :current_value, :name, :original_value, :code, :email, presence: true
 
     with_options allow_blank: true do
