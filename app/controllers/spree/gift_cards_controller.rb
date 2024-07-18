@@ -12,14 +12,16 @@ module Spree
     end
 
     def new
-      @is_e_gift_card = request.path.include?('e-gift-card')
+      # @gift_carda = request.path.include?('e-gift-card')
       find_gift_card_variants
       @gift_card = GiftCard.new
-      if @is_e_gift_card
-        render :e_gift_card
-      else
-        render :gift_card
-      end
+      render :gift_card
+
+      # if @is_e_gift_card
+      #   render :e_gift_card
+      # else
+      #   render :gift_card
+      # end
     end
 
     def create
@@ -66,18 +68,14 @@ module Spree
 
     def find_gift_card_variants
       products = Product.not_deleted.gift_cards
-      products = if @is_e_gift_card
-                   products.e_gift_cards
-                 else
-                   products.not_e_gift_cards
-                 end
+      products = products.e_gift_cards
       @gift_card_product = products.first
       gift_card_product_ids = products.pluck(:id)
       @gift_card_variants = Variant.joins(:prices).where(["amount > 0 AND product_id IN (?)", gift_card_product_ids]).order("amount")
     end
 
     def gift_card_params
-      params.require(:gift_card).permit(:email, :name, :note, :variant_id, :sender_name, :sender_email, :delivery_on)
+      params.require(:gift_card).permit(:email, :name, :message, :variant_id, :sender_name, :sender_email, :delivery_date)
     end
 
     def load_master_variant
