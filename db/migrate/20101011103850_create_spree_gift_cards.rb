@@ -4,14 +4,14 @@ class CreateSpreeGiftCards < ActiveRecord::Migration[4.2]
       t.integer :variant_id, null: false
       t.integer :line_item_id, null: false
       t.string :email
-      t.string :name, null: false
+      t.string :name
       t.string :sender_email 
-      t.string :sender_name, null: false
-      t.text :message, null: false
+      t.string :sender_name
+      t.text :message
       t.string :code, null: false
-      t.integer :status, null: false, default: 0
-      t.boolean :is_information_verified, null: false
-      t.boolean :should_receive_copies, null: false, default: false
+      t.integer :status, default: 0
+      t.boolean :is_information_verified, default: false
+      t.boolean :should_receive_copies, default: false
       t.datetime :sent_at
       t.datetime :delivery_date
       t.datetime :expiry_date
