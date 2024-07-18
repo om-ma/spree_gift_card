@@ -1,5 +1,5 @@
 module Spree
-  module PaymentMethodDecorator
+  module PaymentDecorator
     def self.prepended(base)
       base.class_eval do
         scope :gift_cards, -> { where(source_type: Spree::GiftCard.to_s) }
