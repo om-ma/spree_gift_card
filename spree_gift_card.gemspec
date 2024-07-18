@@ -4,12 +4,11 @@ Gem::Specification.new do |s|
   s.version     = '4.0.0'
   s.summary     = 'Spree Gift Card'
   s.description = 'Spree Gift Card Extension'
-
   s.authors     = ['Wojtek']
   s.email       = ['wojtek@praesens.co']
   s.homepage    = 'https://github.com/praesensco/spree_gift_card'
 
-  spree_version = '~> 4.1'
+  spree_version = '~> 4.3'
 
   s.files       = `git ls-files`.split("\n")
   s.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
