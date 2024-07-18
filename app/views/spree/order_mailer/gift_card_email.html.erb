@@ -5,11 +5,13 @@
   You may want to print a copy of this message for easy reference later.
 </p>
 <table cellspacing="0" cellpadding="0" border="0" width="650">
-  <%# if @gift_card.variant.images.present? %>
-    <%# <tr><td colspan="2" style="padding-bottom: 15px"> %>
-      <%#= image_tag url_for(@gift_card.variant.images.first.variant(resize: "100x100")) %>
-</td></tr>
-  <%# end%>
+  <% if @gift_card.variant.images.present? %>
+    <tr>
+      <td colspan="2" style="padding-bottom: 15px">
+        <%= image_tag url_for(@gift_card.variant.images.first.variant(resize: "100x100")) %>
+      </td>
+    </tr>
+  <% end%>
   <tr>
     <td style="width: 15%">Gift Card Amount:</td>
     <td style="width: 85%"> <%= number_to_currency @gift_card.price %> </td>

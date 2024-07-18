@@ -18,7 +18,7 @@ Spree::Admin::PaymentsController.class_eval do
   end
 
   def payment_via_gift_card?
-    Spree::PaymentMethod.active.find_by(id: params[:payment][:payment_method_id]).eql? gift_card_payment_method && @order.payment?
+    Spree::PaymentMethod.active.find_by(id: params[:payment][:payment_method_id]).eql? gift_card_payment_method
   end
 
   def gift_card
