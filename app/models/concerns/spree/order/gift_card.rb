@@ -13,7 +13,9 @@ module Spree
       end
 
       def total_applied_gift_card
-        payments.gift_cards.valid.sum(:amount)
+        gift_card_payment = payments&.gift_cards
+        return 0 unless gift_card_payment.present?
+        gift_card_payment.valid&.sum(:amount)
       end
 
       def using_gift_card?
