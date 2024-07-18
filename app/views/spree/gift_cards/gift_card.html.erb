@@ -9,8 +9,8 @@
         <%= f.select :variant_id, variants_values(@gift_card_variants), { selected: @variant.try(:id) }, class: 'form-control' %>
       </fieldset>
       <fieldset class="form-group">
-        <%= f.label :note, Spree.t("note") %><br/>
-        <%= f.text_area :note, rows: 6, class: 'form-control' %>
+        <%= f.label :message, Spree.t('message') %><br/>
+        <%= f.text_area :message, rows: 6, class: 'form-control' %>
       </fieldset>
 
       <%= f.submit Spree.t(:add_to_cart), class: 'btn btn-lg btn-success btn-block' %>
