@@ -15,6 +15,7 @@ class CreateSpreeGiftCards < ActiveRecord::Migration[4.2]
       t.datetime :sent_at
       t.datetime :delivery_date
       t.datetime :expiry_date
+      t.boolean :enabled, default: false
       t.decimal :current_value, precision: 8, scale: 2, null: false
       t.decimal :original_value, precision: 8, scale: 2, null: false
       t.timestamps

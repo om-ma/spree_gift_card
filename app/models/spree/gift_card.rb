@@ -16,8 +16,7 @@ module Spree
 
     has_many :transactions, class_name: 'Spree::GiftCardTransaction'
 
-    validates :current_value, :name, :original_value, :code, :email, presence: true
-
+    validates :current_value, :original_value, :code, presence: true
     with_options allow_blank: true do
       validates :code, uniqueness: { case_sensitive: false }
       validates :current_value, numericality: { greater_than_or_equal_to: 0 }
