@@ -9,9 +9,11 @@ class CreateSpreeGiftCards < ActiveRecord::Migration[4.2]
       t.string :sender_name
       t.text :message
       t.string :code, null: false
-      t.integer :status, default: 0
+      t.string :status, default: '0'
       t.boolean :is_information_verified, default: false
-      t.boolean :should_receive_copies, default: false
+      t.boolean :is_same_person, default: false
+      t.string :delivery_options, default: '2'
+      t.boolean :should_receive_copies, default: true
       t.datetime :sent_at
       t.datetime :delivery_date
       t.datetime :expiry_date

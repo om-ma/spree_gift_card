@@ -28,6 +28,7 @@ module Spree
 
     before_validation :generate_code, on: :create
     before_validation :set_values, on: :create
+    after_update_commit :set_gift_delivery_options
 
     def safely_redeem(user)
       if able_to_redeem?(user)
@@ -45,6 +46,9 @@ module Spree
     scope :inactive, -> { where(active: false) }
     scope :deliverable, -> { active.where('sent_at IS NULL AND (delivery_on IS NULL OR delivery_on <= ?)', Time.now) }
     
+    enum delivery_options: { send_by_email: '0', send_by_pdf: '1', both: '2' }
+    enum status: { gift_pending:'0', gift_processing: '1', gift_transfered: '2', gift_canceled: '3' }
+
     def e_gift_card?
       variant.product.is_e_gift_card?
     end
@@ -226,5 +230,17 @@ module Spree
       Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && line_item.order.completed?
     end
 
+    def set_gift_delivery_options
+      order = line_item.order
+      gift_card_items = order.line_items.gift_card_items
+      return if gift_card_items.count == 1
+      selected_gift_option = gift_card_items.first.gift_card
+
+      gift_card_items.each do |line_item|
+        gift_card = line_item.gift_card
+        next unless gift_card.present?
+        gift_card.update_columns(delivery_options: selected_gift_option.delivery_options)
+      end
+    end
   end
 end
