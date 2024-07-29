@@ -5,7 +5,9 @@ module Spree
 
       def create
         @object.assign_attributes(gift_card_params)
+        @object.created_by = 1
         if @object.save
+          Spree::OrderMailer.gift_card_email(@object.id, nil).deliver_later
           flash[:success] = Spree.t(:successfully_created_gift_card)
           redirect_to admin_gift_cards_path
         else

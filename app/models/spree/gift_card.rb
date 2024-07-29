@@ -1,4 +1,4 @@
-require 'spree/core/validators/email'
+# require 'spree/core/validators/email'
 
 module Spree
   class GiftCard < ActiveRecord::Base
@@ -15,6 +15,7 @@ module Spree
 
     has_many :transactions, class_name: 'Spree::GiftCardTransaction'
 
+    enum created_by: { user: 0, admin: 1 }
     validates :current_value, :name, :original_value, :code, :email, presence: true
 
     with_options allow_blank: true do
@@ -28,9 +29,9 @@ module Spree
     before_validation :generate_code, on: :create
     before_validation :set_values, on: :create
 
-    def safely_redeem(user)
+    def safely_redeem(user, current_store)
       if able_to_redeem?(user)
-        redeem(user)
+        redeem(user,current_store)
       elsif amount_remaining.to_f > 0.0
         errors.add(:base, Spree.t('errors.gift_card.unauthorized'))
         false
@@ -168,12 +169,12 @@ module Spree
 
     private
 
-    def redeem(user)
+    def redeem(user, current_store)
       begin
         transaction do
           previous_current_value = amount_remaining
           debit(amount_remaining)
-          build_store_credit(user, previous_current_value).save!
+          build_store_credit(user, previous_current_value, current_store).save!
         end
       rescue Exception => e
         self.errors[:base] = 'There some issue while redeeming the gift card.'
@@ -181,19 +182,20 @@ module Spree
       end
     end
 
-    def build_store_credit(user, previous_current_value)
+    def build_store_credit(user, previous_current_value, current_store)  
       user.store_credits.build(
             amount: previous_current_value,
             category: Spree::StoreCreditCategory.gift_card.last,
-            memo: "Gift Card - #{ variant.product.name } received from #{ recieved_from }",
+            memo: "Gift Card - #{ variant&.product&.name } received from #{ recieved_from }",
             created_by: user,
             action_originator: user,
-            currency: Spree::Config[:currency]
+            currency: Spree::Config[:currency],
+            store: current_store
         )
     end
 
     def recieved_from
-      line_item.order.email
+      self.created_by.eql?('admin') ? 'admin' : line_item.order.email 
     end
 
     def generate_code
@@ -214,7 +216,7 @@ module Spree
     end
 
     def able_to_redeem?(user)
-      Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && line_item.order.completed?
+      Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && (line_item&.order&.completed? || self.created_by.eql?('admin'))
     end
 
   end

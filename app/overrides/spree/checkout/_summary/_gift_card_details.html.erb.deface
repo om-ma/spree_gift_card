@@ -6,11 +6,7 @@
   </tr>
   <tr>
     <td>
-      <%= form_for order, url: update_checkout_path(order.state), html: { id: "checkout_form_#{@order.state}" }, method: :patch do |form| %>
-        <%= form.submit 'Remove Gift Card', class: 'btn btn-default' %>
-        <%= form.hidden_field :state_lock_version %>
-        <%= hidden_field_tag :remove_gift_card %>
-      <% end %>
+    <%= link_to "Remove Gift Card", update_checkout_path(order.state, :remove_gift_card => true), method: :patch, id: "checkout_form_#{order.state}"%>
     </td>
   </tr>
 <% end %>

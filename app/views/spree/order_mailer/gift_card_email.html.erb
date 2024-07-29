@@ -6,7 +6,11 @@
 </p>
 <table cellspacing="0" cellpadding="0" border="0" width="650">
   <% if @gift_card.variant.images.present? %>
-    <tr><td colspan="2" style="padding-bottom: 15px"><%= image_tag @gift_card.variant.images.first.attachment.url(:product), style: 'width: 240px; height: auto' %></td></tr>
+    <tr>
+      <td colspan="2" style="padding-bottom: 15px">
+        <%= image_tag url_for(@gift_card.variant.images.first.variant(resize: "100x100")) %>
+      </td>
+    </tr>
   <% end%>
   <tr>
     <td style="width: 15%">Gift Card Amount:</td>
@@ -28,7 +32,7 @@
   </tr>
   <tr>
     <td style="width: 15%">Sent By:</td>
-    <td style="width: 85%"> <%= @order.email %> </td>
+    <td style="width: 85%"> <%= @order.present? ? @order.email : 'Admin' %> </td>
   </tr>
 </table>
 

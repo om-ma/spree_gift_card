@@ -19,14 +19,18 @@ Spree::CheckoutController.class_eval do
     end
 
     def remove_gift_card_payments
-      if params.key?(:remove_gift_card) && @order.using_gift_card?
-        @order.remove_gift_card_payments
-        redirect_to checkout_state_path(@order.state) and return
+      unless params[:state] == "confirm"
+        if params.key?(:remove_gift_card) && @order.using_gift_card?
+          @order.remove_gift_card_payments
+          redirect_to checkout_state_path(@order.state) and return
+        end
       end
     end
 
     def payment_via_gift_card?
-      params[:state] == "payment" && params[:order].fetch(:payments_attributes, {}).present? && params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
+      unless params[:state] == "confirm"
+        params[:state] == "payment" && params[:order].present? && params[:order].fetch(:payments_attributes, {}).present? && params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
+      end
     end
 
     def load_gift_card
