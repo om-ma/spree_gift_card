@@ -239,7 +239,7 @@ module Spree
       gift_card_items.each do |line_item|
         gift_card = line_item.gift_card
         next unless gift_card.present?
-        gift_card.update_columns(delivery_options: selected_gift_option.delivery_options)
+        gift_card.update_columns(delivery_options: selected_gift_option.delivery_options,should_receive_copies: selected_gift_option.should_receive_copies, is_same_person: selected_gift_option.is_same_person)
       end
     end
   end

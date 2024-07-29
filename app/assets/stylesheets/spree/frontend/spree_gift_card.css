@@ -13,3 +13,16 @@ table.table > tbody > tr.line-item td, table.table > tbody > tr.stock-item td {
 .glyphicon-minus-sign {
   margin-top: 5px;
 }
+
+
+@media (min-width: 992px) {
+  .checkout-content-gift-card-continue-button {
+      padding: 10px;
+      /* height: 65px; */
+      font-size: 1.375rem;
+      line-height: 0.76;
+      letter-spacing: 0.55px;
+      margin-bottom: 100px;
+      padding: 14px 14px;
+  }
+}
