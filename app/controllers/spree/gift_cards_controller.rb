@@ -4,10 +4,11 @@ module Spree
     before_action :load_gift_card, only: :redeem
 
     def redeem
-      if @gift_card.safely_redeem(spree_current_user)
+      @gift_card = @gift_card.safely_redeem(spree_current_user, current_store)
+      unless @gift_card.class.eql?(ActiveModel::Error)
         redirect_to redirect_after_redeem, flash: { success: Spree.t('gift_card_redeemed') }
       else
-        redirect_to root_path, flash: { error: @gift_card.errors.full_messages.to_sentence }
+        redirect_to root_path, flash: { error: reedem_errors}
       end
     end
 
@@ -80,6 +81,10 @@ module Spree
 
     def load_master_variant
       @master_variant = Spree::Product.find_by(slug: params[:product_id]).try(:master)
+    end
+
+    def reedem_errors
+      @gift_card.class.eql?(ActiveModel::Error) ? @gift_card&.message : @gift_card&.errors&.full_messages&.to_sentence
     end
   end
 end

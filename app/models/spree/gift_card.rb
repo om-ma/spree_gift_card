@@ -1,7 +1,9 @@
 # require 'spree/core/validators/email'
 
 module Spree
-  class GiftCard < ActiveRecord::Base
+  class GiftCard < ActiveRecord::Base  
+    class AlreadyRedeemedError < StandardError; end
+  
     include CalculatedAdjustments
     include Spree::GiftCard::Users
 
@@ -30,9 +32,9 @@ module Spree
     before_validation :set_values, on: :create
     after_update_commit :set_gift_delivery_options
 
-    def safely_redeem(user)
+    def safely_redeem(user, current_store)
       if able_to_redeem?(user)
-        redeem(user)
+        redeem(user, current_store)
       elsif amount_remaining.to_f > 0.0
         errors.add(:base, Spree.t('errors.gift_card.unauthorized'))
         false
@@ -181,32 +183,36 @@ module Spree
 
     private
 
-    def redeem(user)
+    def redeem(user, current_store)
       begin
+        raise AlreadyRedeemedError, 'User has already redeemed this coupon' unless user_already_redeemed?(user)
         transaction do
           previous_current_value = amount_remaining
           debit(amount_remaining)
-          build_store_credit(user, previous_current_value).save!
+          build_store_credit(user, previous_current_value, current_store).save!
         end
+      rescue AlreadyRedeemedError => e
+        self.errors.add(:base, e.message)
       rescue Exception => e
-        self.errors[:base] = 'There some issue while redeeming the gift card.'
-        false
+        self.errors.add(:base, 'There some issue while redeeming the gift card.')
       end
     end
 
-    def build_store_credit(user, previous_current_value)
+    def build_store_credit(user, previous_current_value, current_store)
       user.store_credits.build(
             amount: previous_current_value,
             category: Spree::StoreCreditCategory.gift_card.last,
             memo: "Gift Card - #{ variant.product.name } received from #{ recieved_from }",
             created_by: user,
             action_originator: user,
-            currency: Spree::Config[:currency]
+            type_id: Spree::StoreCreditType.last.id,
+            currency: Spree::Config[:currency],
+            store_id: current_store.id
         )
     end
 
     def recieved_from
-      line_item.order.email
+      line_item&.order&.email || 'admin'
     end
 
     def generate_code
@@ -227,7 +233,7 @@ module Spree
     end
 
     def able_to_redeem?(user)
-      Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && line_item.order.completed?
+      Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && (line_item&.order&.completed? || true)
     end
 
     def set_gift_delivery_options
@@ -241,6 +247,10 @@ module Spree
         next unless gift_card.present?
         gift_card.update_columns(delivery_options: selected_gift_option.delivery_options,should_receive_copies: selected_gift_option.should_receive_copies, is_same_person: selected_gift_option.is_same_person)
       end
+    end
+    
+    def user_already_redeemed?(user)
+     self.enabled
     end
   end
 end

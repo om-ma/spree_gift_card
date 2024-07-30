@@ -43,11 +43,21 @@
       <%= f.error_message_on :message %>
       <% end %>
     </div>
+    <div class="col-md-5">
+      <%= f.field_container :variant_id do %>
+      <%= f.label 'Select Variant' %>
+      <%= f.select :variant_id, 
+      options_from_collection_for_select(Spree::Variant.joins(:product).where(product: { is_gift_card: true }), :id, :name), 
+      {}, 
+      { class: 'form-control' } %>
+      <%= f.error_message_on :variant_id %>
+      <% end %>
+    </div>
   <% end %>
   <div class="col-md-5">
     <%= f.field_container :original_value do %>
       <%= f.label :original_value, Spree.t(:value) %> <span class="required">*</span><br/>
-      <%= f.text_field :original_value, class: 'form-control' %>
+      <%= f.number_field :original_value, class: 'form-control' %>
     <% end %>
   </div>
 

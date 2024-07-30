@@ -6,7 +6,7 @@ module Spree
       before_action :load_gift_card, only: :redeem
 
       def redeem
-        if @gift_card.safely_redeem(spree_current_user)
+        if @gift_card.safely_redeem(spree_current_user, current_store)
           redirect_to redirect_after_redeem, flash: { success: Spree.t(:gift_card_redeemed) }
         else
           redirect_to root_path, flash: { error: @gift_card.errors.full_messages.to_sentence }
@@ -30,12 +30,12 @@ module Spree
             line_item.variant = @gift_card.variant
             line_item.price = @gift_card.variant.price
             # Add to order
-            order = current_order(create_order_if_necessary: true)
-            order.line_items << line_item
-            line_item.order = order
-            order.update_totals
-            order.updater.update_item_count
-            order.save!
+            # order = current_order(create_order_if_necessary: true)
+            # order.line_items << line_item
+            # line_item.order = order
+            # order.update_totals
+            # order.updater.update_item_count
+            # order.save!
             # Save gift card
             @gift_card.line_item = line_item
             @gift_card.save!
@@ -66,7 +66,7 @@ module Spree
       end
 
       def gift_card_params
-        params.require(:gift_card).permit(:email, :name, :note, :variant_id)
+        params.require(:gift_card).permit(:email, :name,:sender_email, :sender_name, :message, :variant_id, :current_value)
       end
 
       def load_master_variant
