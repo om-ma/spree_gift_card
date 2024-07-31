@@ -1,4 +1,6 @@
 <!-- insert_after '[data-hook=order_total]' -->
+<h1> HELLO From </h1>
+
 <% if order.using_gift_card? %>
   <tr data-hook="order_details_gift_card">
     <td><%= Spree.t(:gift_card) %>:</strong></td>
