@@ -4,11 +4,10 @@ module Spree
     before_action :load_gift_card, only: :redeem
 
     def redeem
-      @gift_card = @gift_card.safely_redeem(spree_current_user, current_store)
-      unless @gift_card.class.eql?(ActiveModel::Error)
+      if @gift_card.safely_redeem(spree_current_user, current_store)
         redirect_to redirect_after_redeem, flash: { success: Spree.t('gift_card_redeemed') }
       else
-        redirect_to root_path, flash: { error: reedem_errors}
+        redirect_to root_path, flash: { error: reedem_errors }
       end
     end
 

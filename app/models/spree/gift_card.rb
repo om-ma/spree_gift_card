@@ -193,8 +193,10 @@ module Spree
         end
       rescue AlreadyRedeemedError => e
         self.errors.add(:base, e.message)
+        false
       rescue Exception => e
         self.errors.add(:base, 'There some issue while redeeming the gift card.')
+        false
       end
     end
 
