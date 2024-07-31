@@ -1,5 +1,4 @@
-<!-- insert_after '[data-hook=order_total]' -->
-<h1> HELLO From </h1>
+<!-- insert_after '[data-hook=checkout_summary_box]' -->
 
 <% if order.using_gift_card? %>
   <tr data-hook="order_details_gift_card">
