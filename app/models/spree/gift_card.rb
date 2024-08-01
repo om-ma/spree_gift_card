@@ -239,7 +239,9 @@ module Spree
     end
 
     def set_gift_delivery_options
-      order = line_item.order
+      order = line_item&.order
+      return unless order.present?
+
       gift_card_items = order.line_items.gift_card_items
       return if gift_card_items.count == 1
       selected_gift_option = gift_card_items.first.gift_card
