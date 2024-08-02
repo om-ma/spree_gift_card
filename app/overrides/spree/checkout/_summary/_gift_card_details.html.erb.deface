@@ -1,8 +1,14 @@
-<!-- insert_after '[data-hook=checkout_summary_box]' -->
+<!-- insert_after '[data-hook=shipping-total]' -->
 
 <% if order.using_gift_card? %>
-  <tr data-hook="order_details_gift_card">
-    <td><%= Spree.t(:gift_card) %>:</strong></td>
-    <td><span id='summary-gift-card'><%= order.display_total_applied_gift_card.to_html %></span></td>
-  </tr>
+    <div class="d-table-cell"><%= Spree.t(:gift_card) %>:</strong></div>
+    <div class="d-table-cell text-right"><span id='summary-gift-card'><%= order.display_total_applied_gift_card.to_html %></div>
 <% end %>
+
+<!-- insert_bottom '[data-hook=order_summary]' -->
+<% if order.using_gift_card? %>
+    <div class="d-table-cell"><%= order.state.in?(['confirm','complete', 'payment_confirm']) ? 'Paid amount' :  'Balance Due' %>:</strong></div>
+    <div class="d-table-cell text-right"><span id='summary-gift-card'><%= (order.total + order.display_total_applied_gift_card.money.to_f) %></div>
+<% end %>
+
+
