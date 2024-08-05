@@ -49,7 +49,7 @@ module Spree
     scope :deliverable, -> { active.where('sent_at IS NULL AND (delivery_on IS NULL OR delivery_on <= ?)', Time.now) }
     
     enum delivery_options: { send_by_email: '0', send_by_pdf: '1', both: '2' }
-    enum status: { gift_pending:'0', gift_processing: '1', gift_transfered: '2', gift_canceled: '3' }
+    enum status: { gift_pending: 0, gift_processing: 1, gift_transfered: 2, gift_canceled: 3 }
 
     def e_gift_card?
       variant.product.is_e_gift_card?
