@@ -18,6 +18,11 @@ module Spree
         gift_card_payment.valid&.sum(:amount)
       end
 
+
+      def remove_gift_card_payments
+        payments.checkout.gift_cards.map(&:invalidate!) unless completed?
+      end
+
       def using_gift_card?
         total_applied_gift_card > 0
       end
