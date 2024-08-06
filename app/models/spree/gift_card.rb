@@ -25,13 +25,13 @@ module Spree
       validates :email, email: true
     end
 
+    default_scope { order(created_at: :desc) }
 
     validate :amount_remaining_is_positive, if: :current_value
 
     before_validation :generate_code, on: :create
     before_validation :set_values, on: :create
-    after_update_commit :set_gift_delivery_options
-
+    
     def safely_redeem(user, current_store)
       if able_to_redeem?(user)
         redeem(user, current_store)
@@ -237,24 +237,10 @@ module Spree
     def able_to_redeem?(user)
       Spree::Config.allow_gift_card_redeem && user && user.email == email && amount_remaining.to_f > 0.0 && (line_item&.order&.completed? || true)
     end
-
-    def set_gift_delivery_options
-      order = line_item&.order
-      return unless order.present?
-
-      gift_card_items = order.line_items.gift_card_items
-      return if gift_card_items.count == 1
-      selected_gift_option = gift_card_items.first.gift_card
-
-      gift_card_items.each do |line_item|
-        gift_card = line_item.gift_card
-        next unless gift_card.present?
-        gift_card.update_columns(delivery_options: selected_gift_option.delivery_options,should_receive_copies: selected_gift_option.should_receive_copies, is_same_person: selected_gift_option.is_same_person)
-      end
-    end
     
     def user_already_redeemed?(user)
      self.enabled
     end
+
   end
 end
