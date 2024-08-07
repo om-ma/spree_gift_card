@@ -4,42 +4,42 @@
     <div class="col-md-5">
       <%= f.field_container :email do %>
         <%= f.label :email, Spree.t("recipient_email") %> <span class="required">*</span><br/>
-        <%= f.text_field :email, class: 'form-control' %>
+        <%= f.text_field :email, class: 'form-control', required: true %>
         <%= f.error_message_on :email %>
       <% end %>
     </div>
     <div class="col-md-5">
       <%= f.field_container :name do %>
         <%= f.label :name, Spree.t("recipient_name") %> <span class="required">*</span><br/>
-        <%= f.text_field :name, class: 'form-control' %>
+        <%= f.text_field :name, class: 'form-control', required: true  %>
         <%= f.error_message_on :name %>
       <% end %>
     </div>
     <div class="col-md-5">
       <%= f.field_container :sender_email do %>
         <%= f.label :sender_email, Spree.t("sender_email") %> <span class="required">*</span><br/>
-        <%= f.text_field :sender_email, class: 'form-control' %>
+        <%= f.text_field :sender_email, class: 'form-control', required: true  %>
         <%= f.error_message_on :sender_email %>
       <% end %>
     </div>
     <div class="col-md-5">
       <%= f.field_container :sender_name do %>
         <%= f.label :sender_name, Spree.t("sender_name") %> <span class="required">*</span><br/>
-        <%= f.text_field :sender_name, class: 'form-control' %>
+        <%= f.text_field :sender_name, class: 'form-control', required: true  %>
         <%= f.error_message_on :sender_name %>
       <% end %>
     </div>
     <div class="col-md-5">
      <%= f.field_container :delivery_date do %>
         <%= f.label :delivery_date, Spree.t("delivery_date") %> <span class="required">*</span><br/>
-        <%= f.text_field :delivery_date, class: 'form-control datePickerTo flatpickr-input' %>
+        <%= f.text_field :delivery_date, class: 'form-control datePickerTo flatpickr-input', required: true  %>
         <%= f.error_message_on :delivery_date %>
       <% end %>
     </div>
     <div class="col-md-5">
       <%= f.field_container :message do %>
-      <%= f.label :message %>
-      <%= f.text_area :message, rows: 3, class: 'form-control' %>
+      <%= f.label :message %><span class="required">*</span><br/>
+      <%= f.text_area :message, rows: 3, class: 'form-control', required: true  %>
       <%= f.error_message_on :message %>
       <% end %>
     </div>
