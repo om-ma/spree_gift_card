@@ -40,7 +40,8 @@ module Spree
             @gift_card.line_item = line_item
             @gift_card.save!
           end
-          redirect_to cart_path
+          flash[:notice] = "Gift Card has been created Successfully"
+          redirect_to admin_gift_cards_path
         rescue ActiveRecord::RecordInvalid
           find_gift_card_variants
           render :new

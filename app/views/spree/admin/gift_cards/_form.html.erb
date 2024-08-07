@@ -30,9 +30,9 @@
       <% end %>
     </div>
     <div class="col-md-5">
-      <%= f.field_container :delivery_date do %>
+     <%= f.field_container :delivery_date do %>
         <%= f.label :delivery_date, Spree.t("delivery_date") %> <span class="required">*</span><br/>
-        <%= f.datetime_select :delivery_date, class: 'form-control' %>
+        <%= f.text_field :delivery_date, class: 'form-control datePickerTo flatpickr-input' %>
         <%= f.error_message_on :delivery_date %>
       <% end %>
     </div>
@@ -45,9 +45,14 @@
     </div>
     <div class="col-md-5">
       <%= f.field_container :variant_id do %>
-      <%= f.label 'Select Variant' %>
+      <%= f.label 'Select Variant' %><span class="required">*</span><br/>
       <%= f.select :variant_id, 
-      options_from_collection_for_select(Spree::Variant.joins(:product).where(product: { is_gift_card: true }), :id, :name), 
+      options_for_select(
+        Spree::Variant.joins(product: :prices)
+                      .where(spree_products: { is_gift_card: true })
+                      .uniq
+                      .map { |variant| ["#{variant.product.name} - #{variant.price_in(current_currency).display_price}", variant.id] }
+      ), 
       {}, 
       { class: 'form-control' } %>
       <%= f.error_message_on :variant_id %>
@@ -56,7 +61,7 @@
   <% end %>
   <div class="col-md-5">
     <%= f.field_container :original_value do %>
-      <%= f.label :original_value, Spree.t(:value) %> <span class="required">*</span><br/>
+      <%= f.label :original_value, Spree.t(:value) %>
       <%= f.number_field :original_value, class: 'form-control' %>
     <% end %>
   </div>
