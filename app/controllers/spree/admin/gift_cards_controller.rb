@@ -5,6 +5,10 @@ module Spree
       before_action :load_master_variant, only: :new
       before_action :load_gift_card, only: :redeem
 
+      def index
+        @gift_cards =  Spree::GiftCard.page(params[:page]).per(params[:per_page])
+      end
+
       def redeem
         if @gift_card.safely_redeem(spree_current_user, current_store)
           redirect_to redirect_after_redeem, flash: { success: Spree.t(:gift_card_redeemed) }
