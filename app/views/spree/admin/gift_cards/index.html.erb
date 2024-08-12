@@ -33,14 +33,14 @@
   <tbody>
     <% @gift_cards.each do |card| %>
       <tr id="<%= spree_dom_id card %>">
-        <td width="20"><%= card.code %></td>
-        <td width="10"><%= number_to_currency card.original_value %></td>
-        <td width="10"><%= number_to_currency card.current_value %></td>
-        <td width="10"><%= card.name %></td>
-        <td width="10"><%= card.email %></td>
-        <td width="10"><%= card.sender_name %></td>
-        <td width="10"><%= card.sender_email %></td>
-        <td width="15"><%= card.message %></td>
+        <td width="20" class="text-center"><%= card.code %></td>
+        <td width="10" class="text-center"><%= number_to_currency card.original_value %></td>
+        <td width="10" class="text-center"><%= number_to_currency card.current_value %></td>
+        <td width="10" class="text-center"><%= card.name %></td>
+        <td width="10" class="text-center"><%= card.email %></td>
+        <td width="10" class="text-center"><%= card.sender_name %></td>
+        <td width="10" class="text-center"><%= card.sender_email %></td>
+        <td width="15" class="text-center"><%= card.message %></td>
         <td class="actions" width="5">
           <%= link_to_edit card, no_text: true if can?(:edit, card) %>
           &nbsp;
