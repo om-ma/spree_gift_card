@@ -58,6 +58,10 @@ module Spree
         line_items.all?(&:is_e_gift_card?)
       end
 
+      def specific_gift_card_only?
+        line_items.all? { |item| item.variant.is_specific_gift_card? }
+      end
+
       private
 
       def create_gift_card_payment(payment_method, gift_card, amount)

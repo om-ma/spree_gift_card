@@ -34,7 +34,9 @@ en:
     gift_code_applied: 'Gift code has been successfully applied to your order.'
     gift_code_already_applied: 'Gift code has already been used.'
     gift_code_not_found: "The gift code you entered doesn't exist. Please try again."
+    specific_gift_code: "Gift is n't valid for this order"
     is_gift_card: "is gift card"
+    is_specific_gift_card: "is specific gift card"
     new_gift_card: 'New Gift Card'
     message: 'Message'
     original_value: "Original Value"

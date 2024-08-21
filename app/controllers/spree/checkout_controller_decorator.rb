@@ -39,9 +39,23 @@ module Spree
       else
         sync_integrated_gift_card(@gift_card)
       end
+      if @gift_card.present?
+        unless eligible_for_gift?
+          redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('specific_gift_code') } and return
+        end
+      else
+        redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('gift_code_not_found') } and return
+      end
+    end
 
-      return if @gift_card
-      redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('gift_code_not_found') } and return
+
+    def eligible_for_gift?
+      if @gift_card.check_specific_gift_card? || @order.specific_gift_card_only?
+        unless @order.line_items.find_by_variant_id(@gift_card.variant.id)
+          return false
+        end
+      end
+      true
     end
 
     def gift_card_payment_method

@@ -55,6 +55,15 @@ module Spree
       variant.product.is_e_gift_card?
     end
 
+
+    def check_is_gift_card?
+      variant.product.is_gift_card?
+    end
+
+    def check_specific_gift_card?
+      variant.is_specific_gift_card?
+    end
+
     def amount_remaining
       current_value - authorized_amount
     end
@@ -219,7 +228,7 @@ module Spree
 
     def generate_code
       until self.code.present? && self.class.where(code: self.code).count == 0
-        self.code  = Digest::SHA1.hexdigest([Time.now, rand].join)[0..7]
+        self.code  = Digest::SHA1.hexdigest([Time.now, rand].join)[0..9]
       end
     end
 
