@@ -64,6 +64,14 @@ module Spree
       variant.is_specific_gift_card?
     end
 
+    def gift_card_product
+      variant.product
+    end
+
+    def gift_card_vendor
+      variant.product&.vendor
+    end
+
     def amount_remaining
       current_value - authorized_amount
     end
