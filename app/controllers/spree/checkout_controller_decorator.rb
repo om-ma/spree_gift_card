@@ -49,9 +49,15 @@ module Spree
     end
 
 
+    def product_having_variant(gift_card)
+      variant = gift_card.variant
+      product = variant.product
+      product.variants.ids.include?(variant.id)
+    end
+
     def eligible_for_gift?
       if @gift_card.check_specific_gift_card? || @order.specific_gift_card_only?
-        unless @order.line_items.find_by_variant_id(@gift_card.variant.id)
+        unless product_having_variant(@gift_card)
           return false
         end
       end
