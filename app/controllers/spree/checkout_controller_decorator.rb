@@ -48,18 +48,20 @@ module Spree
       end
     end
 
-
-    def product_having_variant(gift_card)
+    def product_having_variant(gift_card, order)
       variant = gift_card.variant
       product = variant.product
-      product.variants.ids.include?(variant.id)
+      order_variant_ids = order.products.flat_map { |product| product.variants.ids }
+      variant_ids = product.variants.ids
+      (order_variant_ids & variant_ids).any?
     end
 
     def eligible_for_gift?
       if @gift_card.check_specific_gift_card? || @order.specific_gift_card_only?
-        unless product_having_variant(@gift_card)
-          return false
+        if product_having_variant(@gift_card, @order)
+          return true
         end
+        return false
       end
       true
     end
