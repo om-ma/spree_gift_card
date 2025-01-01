@@ -1,3 +1,5 @@
+<% if Flipper.enabled?(:gift_card) %>
+
 <!-- insert_bottom "[data-hook='admin_tabs'], #admin_tabs[data-hook]"
      enabled
      original 'fc9c9d3ac8a3ce2ae5deb141d683fde887e4ff75' -->
@@ -7,3 +9,5 @@
     <%= tab(:gift_cards, spree.admin_gift_cards_path, icon: 'gift') %>
   </li>
 </ul>
+
+<% end %>

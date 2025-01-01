@@ -1,3 +1,5 @@
+<% if Flipper.enabled?(:gift_card) %>
+
 <% content_for :page_title do %>
   <%= Spree.t(:editing_gift_card) %>
 <% end %>
@@ -23,3 +25,5 @@
   <li><%= link_to("#{transaction.order.number}:" , edit_admin_order_path(transaction.order)) if transaction.order.present? %> <%= number_to_currency transaction.amount %></li>
   <% end %>
 </ul>
+
+<% end %>

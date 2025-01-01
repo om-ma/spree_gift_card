@@ -1,3 +1,5 @@
+<% if Flipper.enabled?(:gift_card) %>
 <!-- insert_bottom "#sidebar, [data-hook='sidebar']"
      enabled
      original '2f11ce271ae3b346b9fc6a927598ad6d6d6a1885' -->
+<% end %>

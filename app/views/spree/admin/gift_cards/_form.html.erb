@@ -1,3 +1,5 @@
+<% if Flipper.enabled?(:gift_card) %>
+
 <div data-hook="admin_gift_card_form_fields" class="row clearfix">
   <% gift_card = @gift_card || f.object.persisted? && f.object.gift_card? %>
   <% if gift_card %>
@@ -67,3 +69,5 @@
   </div>
 
 </div>
+
+<% end %>

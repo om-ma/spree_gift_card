@@ -1,3 +1,4 @@
+<% if Flipper.enabled?(:gift_card) %>
 <style>
   .container {
     overflow: auto;
@@ -55,3 +56,4 @@
 <%= render 'spree/admin/shared/index_table_options', collection: @gift_cards, simple: true %>
 
 <%#= paginate @gift_cards %>
+<% end %>
