@@ -7,44 +7,50 @@ module Spree
     private
 
     def add_gift_card_payments
-      if spree_current_user.present? && !spree_current_user.gift_cards.include?(@gift_card)
-        spree_current_user.gift_cards << @gift_card
-      end
-      @order.add_gift_card_payments(@gift_card)
+      if Flipper.enabled?(:gift_card)
+        if spree_current_user.present? && !spree_current_user.gift_cards.include?(@gift_card)
+          spree_current_user.gift_cards << @gift_card
+        end
+        @order.add_gift_card_payments(@gift_card)
 
-      # Remove other payment method parameters.
-      params[:order].delete(:payments_attributes)
-      params.delete(:payment_source)
+        # Remove other payment method parameters.
+        params[:order].delete(:payments_attributes)
+        params.delete(:payment_source)
 
-      # Return to the Payments page if additional payment is needed.
-      if @order.payments.valid.sum(:amount) < @order.total
-        redirect_to checkout_state_path(@order.state)
-        flash[:success] = Spree.t('gift_card_added_partial')
-        return
-      else
-        flash[:success] = Spree.t('gift_card_added')
+        # Return to the Payments page if additional payment is needed.
+        if @order.payments.valid.sum(:amount) < @order.total
+          redirect_to checkout_state_path(@order.state)
+          flash[:success] = Spree.t('gift_card_added_partial')
+          return
+        else
+          flash[:success] = Spree.t('gift_card_added')
+        end
       end
     end
 
     def payment_via_gift_card?
-      params[:state] == 'payment' &&
-        params[:order].fetch(:payments_attributes, {}).present? &&
-        params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
+      if Flipper.enabled?(:gift_card)
+        params[:state] == 'payment' &&
+          params[:order].fetch(:payments_attributes, {}).present? &&
+          params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
+      end
     end
 
     def load_gift_card
-      @gift_card = Spree::GiftCard.find_by(code: params[:payment_source][gift_card_payment_method.try(:id).to_s][:code])
-      if @gift_card.nil?
-        @gift_card = import_integrated_gift_card
-      else
-        sync_integrated_gift_card(@gift_card)
-      end
-      if @gift_card.present?
-        unless eligible_for_gift?
-          redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('specific_gift_code') } and return
+      if Flipper.enabled?(:gift_card)
+        @gift_card = Spree::GiftCard.find_by(code: params[:payment_source][gift_card_payment_method.try(:id).to_s][:code])
+        if @gift_card.nil?
+          @gift_card = import_integrated_gift_card
+        else
+          sync_integrated_gift_card(@gift_card)
         end
-      else
-        redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('gift_code_not_found') } and return
+        if @gift_card.present?
+          unless eligible_for_gift?
+            redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('specific_gift_code') } and return
+          end
+        else
+          redirect_to checkout_state_path(@order.state), flash: { error: Spree.t('gift_code_not_found') } and return
+        end
       end
     end
 
