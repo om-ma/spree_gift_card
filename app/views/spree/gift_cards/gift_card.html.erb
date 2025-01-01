@@ -1,3 +1,5 @@
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
+
 <fieldset>
   <legend align="center"><%= Spree.t(:gift_cards) %> </legend>
   <%= render "spree/shared/error_messages", target: @gift_card %>
@@ -17,3 +19,4 @@
     </div>
   <% end %>
 </fieldset>
+<%  end %>

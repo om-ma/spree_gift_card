@@ -1,7 +1,9 @@
-<!-- replace_contents '[data-hook="cart_item_quantity"]' -->
 
-<% if line_item.gift_card.present? %>
-  <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity", size: 5, max: ::Spree::LineItem::MAXIMUM_GIFT_CARD_LIMIT %>
-<% else %>
-  <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity", size: 5 %>
+<!-- replace_contents '[data-hook="cart_item_quantity"]' -->
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
+  <% if line_item.gift_card.present? %>
+    <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity", size: 5, max: ::Spree::LineItem::MAXIMUM_GIFT_CARD_LIMIT %>
+  <% else %>
+    <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity", size: 5 %>
+  <% end %>
 <% end %>
