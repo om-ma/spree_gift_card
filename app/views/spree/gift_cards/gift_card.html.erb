@@ -1,4 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
 
 <fieldset>
   <legend align="center"><%= Spree.t(:gift_cards) %> </legend>
@@ -19,4 +19,4 @@
     </div>
   <% end %>
 </fieldset>
-<% end %>
+<%  end %>

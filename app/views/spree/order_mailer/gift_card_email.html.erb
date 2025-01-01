@@ -1,4 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
 
 <p>Hi <%= @gift_card.name %>,</p>
 <p>
@@ -37,4 +37,4 @@
 <p>Best Regards </p>
 <p><%= Spree::Store.current.name %></p>
 
-<% end %>
+<%  end %>

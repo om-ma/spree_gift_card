@@ -1,4 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
   <div class="well clearfix">
     <% param_prefix = "payment_source[#{payment_method.id}]" %>
 
@@ -9,4 +9,4 @@
       <%= text_field_tag "#{param_prefix}[code]", "", { id: "gift_code_#{payment_method.id}", :class => 'form-control required'} %>
     </p>
   </div>
-<% end %>
+<%  end %>

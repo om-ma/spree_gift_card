@@ -7,7 +7,7 @@ module Spree
     private
 
     def add_gift_card_payments
-      if Flipper.enabled?(:gift_card)
+     if  SpreeGift::FlipperIntegration.gift_card_enabled?
         if spree_current_user.present? && !spree_current_user.gift_cards.include?(@gift_card)
           spree_current_user.gift_cards << @gift_card
         end
@@ -29,7 +29,7 @@ module Spree
     end
 
     def payment_via_gift_card?
-      if Flipper.enabled?(:gift_card)
+      if  SpreeGift::FlipperIntegration.gift_card_enabled?
         params[:state] == 'payment' &&
           params[:order].fetch(:payments_attributes, {}).present? &&
           params[:order][:payments_attributes].select { |payments_attribute| gift_card_payment_method.try(:id).to_s == payments_attribute[:payment_method_id] }.present?
@@ -37,7 +37,7 @@ module Spree
     end
 
     def load_gift_card
-      if Flipper.enabled?(:gift_card)
+      if  SpreeGift::FlipperIntegration.gift_card_enabled?
         @gift_card = Spree::GiftCard.find_by(code: params[:payment_source][gift_card_payment_method.try(:id).to_s][:code])
         if @gift_card.nil?
           @gift_card = import_integrated_gift_card

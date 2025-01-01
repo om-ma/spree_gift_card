@@ -1,4 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
 
 <% content_for :page_title do %>
   <%= Spree.t(:editing_gift_card) %>
@@ -26,4 +26,4 @@
   <% end %>
 </ul>
 
-<% end %>
+<%  end %>

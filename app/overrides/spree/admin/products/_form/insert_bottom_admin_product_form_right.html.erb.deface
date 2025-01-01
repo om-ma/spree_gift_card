@@ -1,10 +1,7 @@
-<% if Flipper.enabled?(:gift_card) %>
-
 <!-- insert_bottom "[data-hook='admin_product_form_right']"
      enabled -->
-
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
 <p>
   <%= f.check_box(:is_gift_card) %> <%= f.label :is_gift_card, Spree.t("is_gift_card")%>
 </p>
-
 <% end %>

@@ -1,4 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
   <fieldset data-hook="credit_card">
     <legend><%= Spree.t(:gift_card) %></legend>
     <table class="table table-condensed table-bordered">

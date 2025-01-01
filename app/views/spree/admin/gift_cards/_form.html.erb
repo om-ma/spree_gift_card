@@ -1,5 +1,4 @@
-<% if Flipper.enabled?(:gift_card) %>
-
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
 <div data-hook="admin_gift_card_form_fields" class="row clearfix">
   <% gift_card = @gift_card || f.object.persisted? && f.object.gift_card? %>
   <% if gift_card %>
