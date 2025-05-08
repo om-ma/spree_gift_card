@@ -1,6 +1,6 @@
 <!-- insert_bottom "[data-hook='admin_product_form_right']"
      enabled -->
-<% if  SpreeGift::FlipperIntegration.gift_card_enabled? %>
+<% if  SpreeGift::FlipperIntegration.gift_card_enabled? && !@product.variants.any? { |item| item.is_specific_gift_card? } %>
 <p>
   <%= f.check_box(:is_gift_card) %> <%= f.label :is_gift_card, Spree.t("is_gift_card")%>
 </p>
